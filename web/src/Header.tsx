@@ -37,9 +37,13 @@ export const Header: React.FC<Props> = () => {
         {!loading && data && data.me ? (
           <button
             onClick={async () => {
-              await logout();
-              setAccessToken('');
-              await client!.resetStore();
+              try {
+                await logout();
+                setAccessToken('');
+                await client!.resetStore();
+              } catch (err) {
+                console.log(err.message);
+              }
             }}
           >
             logout
