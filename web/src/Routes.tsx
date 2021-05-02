@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Header } from './Header';
 import { Bye } from './pages/Bye';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
@@ -9,20 +10,7 @@ export const Routes: React.FC = () => {
   return (
     <BrowserRouter>
       <div>
-        <header>
-          <div>
-            <Link to='/'>home</Link>
-          </div>
-          <div>
-            <Link to='/register'>register</Link>
-          </div>
-          <div>
-            <Link to='/login'>login</Link>
-          </div>
-          <div>
-            <Link to='/bye'>bye</Link>
-          </div>
-        </header>
+        <Header />
         <Switch>
           <Route exact path='/' component={Home} />
           <Route path='/register' component={Register} />
