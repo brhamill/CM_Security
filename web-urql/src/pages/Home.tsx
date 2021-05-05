@@ -1,10 +1,14 @@
 import React from 'react';
 import { useUsersQuery } from '../generated/graphql';
 
-interface Props {}
+export const Home: React.FC = () => {
+  console.log('Home');
 
-export const Home: React.FC<Props> = () => {
-  const { data } = useUsersQuery();
+  const [result] = useUsersQuery();
+
+  const { data } = result;
+
+  console.log(data);
 
   if (!data) {
     return <div>loading...</div>;

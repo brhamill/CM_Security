@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
 import {
   ApolloClient,
@@ -11,7 +10,7 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
-import jwtDeode, { JwtPayload } from 'jwt-decode';
+import jwtDecode, { JwtPayload } from 'jwt-decode';
 
 import { getAccessToken, setAccessToken } from './accessToken';
 import { App } from './App';
@@ -49,7 +48,7 @@ const tokenRefreshLink = new TokenRefreshLink({
     }
 
     try {
-      const { exp } = jwtDeode<JwtPayload>(token);
+      const { exp } = jwtDecode<JwtPayload>(token);
 
       if (exp && Date.now() >= exp * 1000) {
         return false;
