@@ -3,8 +3,6 @@ import Layout from '../components/Layout';
 import { useLoginMutation, MeQuery, MeDocument } from '../generated/graphql';
 import { setAccessToken } from '../lib/accessToken';
 import Router from 'next/router';
-import { GetServerSidePropsContext } from 'next';
-import { addApolloState, initializeApollo } from '../lib/apolloClient';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,7 +14,6 @@ const Login = () => {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          console.log('form submitted');
           const response = await login({
             variables: {
               email,
@@ -35,8 +32,6 @@ const Login = () => {
               });
             },
           });
-
-          console.log(response);
 
           if (response && response.data) {
             setAccessToken(response.data.login.accessToken);
@@ -68,20 +63,6 @@ const Login = () => {
       </form>
     </Layout>
   );
-};
-
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const client = initializeApollo({ headers: context.req.headers } as any);
-
-  const { req } = context;
-
-  console.log(req.cookies, 'Any cookies?');
-
-  return addApolloState(client, {
-    props: {},
-  });
 };
 
 export default Login;

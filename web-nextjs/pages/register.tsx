@@ -13,15 +13,12 @@ const Register = () => {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          console.log('form submitted');
           const response = await register({
             variables: {
               email,
               password,
             },
           });
-
-          console.log(response);
 
           Router.push('/');
         }}

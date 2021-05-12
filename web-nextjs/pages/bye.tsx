@@ -14,7 +14,6 @@ const Bye = () => {
   }
 
   if (error) {
-    console.log(error);
     return (
       <Layout>
         <div>err</div>
