@@ -2,7 +2,7 @@ import React from 'react';
 import { useByeQuery } from '../generated/graphql';
 import Layout from '../components/Layout';
 
-export default () => {
+const Bye = () => {
   const { data, loading, error } = useByeQuery();
 
   if (loading) {
@@ -36,3 +36,5 @@ export default () => {
     </Layout>
   );
 };
+
+export default Bye;

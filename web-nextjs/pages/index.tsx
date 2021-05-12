@@ -2,7 +2,7 @@ import React from 'react';
 import { useUsersQuery } from '../generated/graphql';
 import Layout from '../components/Layout';
 
-export default () => {
+const Home = () => {
   const { data } = useUsersQuery({ fetchPolicy: 'network-only' });
 
   if (!data) {
@@ -30,3 +30,5 @@ export default () => {
     </Layout>
   );
 };
+
+export default Home;

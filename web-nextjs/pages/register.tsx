@@ -3,7 +3,7 @@ import { useRegisterMutation } from '../generated/graphql';
 import Layout from '../components/Layout';
 import Router from 'next/router';
 
-export default () => {
+const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [register] = useRegisterMutation();
@@ -50,3 +50,5 @@ export default () => {
     </Layout>
   );
 };
+
+export default Register;

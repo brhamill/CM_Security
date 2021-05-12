@@ -3,8 +3,10 @@ import Layout from '../components/Layout';
 import { useLoginMutation, MeQuery, MeDocument } from '../generated/graphql';
 import { setAccessToken } from '../lib/accessToken';
 import Router from 'next/router';
+import { GetServerSidePropsContext } from 'next';
+import { addApolloState, initializeApollo } from '../lib/apolloClient';
 
-export default () => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [login] = useLoginMutation();
@@ -67,3 +69,19 @@ export default () => {
     </Layout>
   );
 };
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const client = initializeApollo({ headers: context.req.headers } as any);
+
+  const { req } = context;
+
+  console.log(req.cookies, 'Any cookies?');
+
+  return addApolloState(client, {
+    props: {},
+  });
+};
+
+export default Login;
