@@ -6,11 +6,9 @@ import { useApollo } from '../lib/apolloClient';
 const App = ({ Component, pageProps }: AppProps) => {
   const apolloClient = useApollo(pageProps);
 
-  if (pageProps && pageProps.serverAccessToken) {
-    setAccessToken(pageProps.serverAccessToken);
-  }
-
-  console.log('pageProps', pageProps);
+  // if (pageProps && pageProps.serverAccessToken) {
+  //   setAccessToken(pageProps.serverAccessToken);
+  // }
 
   return (
     <ApolloProvider client={apolloClient}>

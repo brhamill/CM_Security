@@ -20,7 +20,7 @@ export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__';
 
 const isServer = () => typeof window === 'undefined';
 
-let apolloClient: ApolloClient<NormalizedCacheObject>;
+let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
 function createApolloClient() {
   const httpLink = new HttpLink({
@@ -35,7 +35,7 @@ function createApolloClient() {
       const token = getAccessToken();
 
       if (!token) {
-        return true;
+        return false;
       }
 
       try {
@@ -60,14 +60,14 @@ function createApolloClient() {
       setAccessToken(accessToken);
     },
     handleError: (err) => {
-      console.warn('Your refresh token is invalid. Try to relogin');
-      console.error(err);
+      // console.warn('Your refresh token is invalid. Try to relogin');
+      // console.error(err);
     },
   });
 
   const authLink = setContext((_request, { headers }) => {
     // const token = isServer() ? serverAccessToken : getAccessToken();
-    const token = isServer() ? '' : getAccessToken();
+    const token = getAccessToken();
     return {
       headers: {
         ...headers,
@@ -76,10 +76,42 @@ function createApolloClient() {
     };
   });
 
-  const errorLink = onError(({ graphQLErrors, networkError }) => {
-    console.log(graphQLErrors);
-    console.log(networkError);
-  });
+  // const errorLink = onError(({ graphQLErrors, networkError }) => {
+  //   console.log(graphQLErrors);
+  //   if (networkError) console.log(networkError);
+  // });
+
+  const errorLink = onError(
+    ({ graphQLErrors, networkError, operation, forward }) => {
+      if (graphQLErrors) {
+        for (let err of graphQLErrors) {
+          if (err.extensions) {
+            switch (err.extensions.code) {
+              // Apollo Server sets code to UNAUTHENTICATED
+              // when an AuthenticationError is thrown in a resolver
+              case 'INTERNAL_SERVER_ERROR':
+                // Modify the operation context with a new token
+                const oldHeaders = operation.getContext().headers;
+                operation.setContext({
+                  headers: {
+                    ...oldHeaders,
+                    // authorization: getNewToken(),
+                  },
+                });
+                // Retry the request, returning the new observable
+                return forward(operation);
+            }
+          }
+        }
+      }
+
+      // To retry on network errors, we recommend the RetryLink
+      // instead of the onError link. This just logs the error.
+      if (networkError) {
+        console.log(`[Network error]: ${networkError}`);
+      }
+    }
+  );
 
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
